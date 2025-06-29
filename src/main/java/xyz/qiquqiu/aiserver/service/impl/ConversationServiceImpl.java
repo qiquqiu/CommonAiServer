@@ -1,6 +1,7 @@
 package xyz.qiquqiu.aiserver.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,10 +10,8 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
-import xyz.qiquqiu.aiserver.common.BaseResult;
-import xyz.qiquqiu.aiserver.common.ConversationVO;
-import xyz.qiquqiu.aiserver.common.MessageVO;
-import xyz.qiquqiu.aiserver.common.SendMessageDTO;
+import xyz.qiquqiu.aiserver.common.*;
+import xyz.qiquqiu.aiserver.constant.Sender;
 import xyz.qiquqiu.aiserver.context.BaseContext;
 import xyz.qiquqiu.aiserver.entity.po.Conversation;
 import xyz.qiquqiu.aiserver.entity.po.Message;
@@ -24,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -40,6 +40,8 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
 
     private final IMessageService messageService;
     private final ChatClient defaultChatClient;
+    private final ChatMemory chatMemory;
+    private final ChatClient titleClient;
 
     // 创建新对话
     @Override
@@ -110,6 +112,7 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
     @Override
     @Transactional
     public Flux<String> sendMessage(SendMessageDTO dto) {
+        dto.setSender(Sender.USER);
         messageService.saveAndUpdate(dto);
 
         // TODO 将图片上传到本地服务器或者上传到云服务器保存url
@@ -123,5 +126,45 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
                 .content();
 
         // TODO 保存ai消息
+    }
+
+    // 保存上次ai对话记录保存db，并且产生新标题
+    @Override
+    public BaseResult saveAiResponse(String conversationId, FinalizeDTO dto) {
+        if (StrUtil.isBlank(dto.getAiResponse())) {
+            return BaseResult.error();
+        }
+
+        // 保存db
+        log.debug("保存ai回复到DB消息表");
+        SendMessageDTO msgDTO = new SendMessageDTO()
+                .setConversationId(conversationId)
+                .setSender(Sender.ASSISTANT)
+                .setContent(dto.getAiResponse());
+
+        messageService.saveAndUpdate(msgDTO);
+
+        return BaseResult.success();
+    }
+
+    @Override
+    public BaseResult<String> generateTitle(String conversationId) {
+        // 直接使用ChatMemory获取内存中的所有会话（并非全部，这与大多数app同样的逻辑），而维护的MessageWindow是有限的，所以内存基本没有压力
+        List<org.springframework.ai.chat.messages.Message> messageList = chatMemory.get(conversationId);
+        String totalPrompt = messageList.stream()
+                .map(message -> new SimpleMessage(message.getMessageType(), message.getText()).toString())
+                .collect(Collectors.joining(" "));
+        log.debug("正在生成对话标题，对话id：{}，对话总prompt：【{}】", conversationId, totalPrompt);
+        String title = titleClient.prompt() // 使用单独配置的标题生成ai
+                .user(totalPrompt)
+                .call() // 无需流式响应
+                .content();
+        log.debug("AI生成对话：{} 的标题为：【{}】", conversationId, title);
+        this.lambdaUpdate()
+                .eq(Conversation::getId, conversationId)
+                .set(Conversation::getTitle, title)
+                .update();
+        log.debug("对话：{} 的标题已更新！", conversationId);
+        return BaseResult.success(title);
     }
 }

@@ -15,7 +15,7 @@ spring:
       memory:
         repository:
           jdbc:
-            initialize-schema: always
+            initialize-schema: never
             schema: classpath:schema-@@platform@@.sql
             platform: mysql
   datasource:

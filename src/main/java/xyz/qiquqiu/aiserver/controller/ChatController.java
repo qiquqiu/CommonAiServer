@@ -1,9 +1,9 @@
 package xyz.qiquqiu.aiserver.controller;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import xyz.qiquqiu.aiserver.common.*;
@@ -34,7 +34,7 @@ public class ChatController {
 
     @GetMapping("/conversations/{conversationId}/messages")
     public BaseResult<List<MessageVO>> getConversationMessages(@PathVariable String conversationId) {
-        if (!StringUtils.hasLength(conversationId)) {
+        if (StrUtil.isBlank(conversationId)) {
             return BaseResult.error();
         }
         return chatService.getConversationMessages(conversationId);
@@ -43,5 +43,25 @@ public class ChatController {
     @PostMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> sendMessage(@RequestBody @Valid SendMessageDTO dto) {
         return chatService.sendMessage(dto);
+    }
+
+    // 保存AI回复
+    @PostMapping("/conversations/{conversationId}/save")
+    public BaseResult saveAiResponse(@PathVariable String conversationId,
+                                     @RequestBody FinalizeDTO dto
+    ) {
+        if (StrUtil.isBlank(conversationId)) {
+            return BaseResult.error();
+        }
+        return chatService.saveAiResponse(conversationId, dto);
+    }
+
+    // 请求生成会话标题
+    @GetMapping("/conversations/{conversationId}/title")
+    public BaseResult<String> generateTitle(@PathVariable String conversationId) {
+        if (StrUtil.isBlank(conversationId)) {
+            return BaseResult.error();
+        }
+        return chatService.generateTitle(conversationId);
     }
 }

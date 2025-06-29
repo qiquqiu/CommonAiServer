@@ -7,6 +7,7 @@ import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
+import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,17 @@ public class AiConfig {
                         new SimpleLoggerAdvisor(),
                         MessageChatMemoryAdvisor.builder(chatMemory).build()
                 )
+                .build();
+    }
+
+    // 单次使用的标题生成模型，无需配置聊天记忆
+    @Bean
+    public ChatClient titleClient(OpenAiChatModel model) {
+        log.debug("初始化 TitleClient...");
+        return ChatClient
+                .builder(model)
+                .defaultOptions(ChatOptions.builder().model("qwen-turbo-latest").build())
+                .defaultSystem(SystemPrompt.TITLE_GENERATOR_SYSTEM_PROMPT)
                 .build();
     }
 

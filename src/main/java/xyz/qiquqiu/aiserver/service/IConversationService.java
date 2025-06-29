@@ -24,4 +24,8 @@ public interface IConversationService extends IService<Conversation> {
     BaseResult<List<MessageVO>> getConversationMessages(String conversationId);
 
     Flux<String> sendMessage(SendMessageDTO dto);
+
+    BaseResult saveAiResponse(String conversationId, FinalizeDTO dto);
+
+    BaseResult<String> generateTitle(String conversationId);
 }
