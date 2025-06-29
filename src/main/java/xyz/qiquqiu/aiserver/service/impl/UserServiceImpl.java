@@ -3,8 +3,8 @@ package xyz.qiquqiu.aiserver.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.qiquqiu.aiserver.common.BaseResult;
-import xyz.qiquqiu.aiserver.common.LoginRequest;
-import xyz.qiquqiu.aiserver.common.LoginResult;
+import xyz.qiquqiu.aiserver.common.LoginRequestDTO;
+import xyz.qiquqiu.aiserver.common.LoginResultVO;
 import xyz.qiquqiu.aiserver.entity.po.User;
 import xyz.qiquqiu.aiserver.mapper.UserMapper;
 import xyz.qiquqiu.aiserver.properties.JwtProperties;
@@ -34,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 用户注册
     @Override
-    public boolean save(LoginRequest req) {
+    public boolean save(LoginRequestDTO req) {
         // 新增用户
         String username = req.getUsername();
         String password = MD5Util.encode(req.getPassword());
@@ -42,14 +42,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         try {
             this.save(user);
         } catch (Exception e) {
+            log.error("注册失败！", e);
             return false;
         }
+        log.debug("注册成功！");
         return true;
     }
 
     // 用户登录
     @Override
-    public BaseResult<LoginResult> login(LoginRequest req) {
+    public BaseResult<LoginResultVO> login(LoginRequestDTO req) {
         // 1.判断存在并且校验
         User user = this.lambdaQuery().eq(User::getUsername, req.getUsername()).one();
         if (user == null) {
@@ -68,6 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Map<String, Object> claims = new HashMap<>(); // jwt的载荷
         claims.put("userId", user.getId());
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), ttl, claims);
-        return BaseResult.success(new LoginResult(token, String.valueOf(user.getId()), user.getUsername()));
+        log.debug("登录成功！");
+        return BaseResult.success(new LoginResultVO(token, String.valueOf(user.getId()), user.getUsername()));
     }
 }

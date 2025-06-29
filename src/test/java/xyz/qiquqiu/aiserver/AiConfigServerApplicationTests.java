@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootTest
-class AiServerApplicationTests {
+class AiConfigServerApplicationTests {
 
     @Test
     void contextLoads() {
-        Map<String, Object> claims = new HashMap<>(); // jwt的载荷
+        Map<String, Object> claims = new HashMap<>();
         claims.put("userId", 1);
         String token = JwtUtil.createJWT("thisisasecretkeythatismorethan32byteslongandsecure", 7200000, claims);
 

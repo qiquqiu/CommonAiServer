@@ -1,8 +1,8 @@
 package xyz.qiquqiu.aiserver.service;
 
 import xyz.qiquqiu.aiserver.common.BaseResult;
-import xyz.qiquqiu.aiserver.common.LoginRequest;
-import xyz.qiquqiu.aiserver.common.LoginResult;
+import xyz.qiquqiu.aiserver.common.LoginRequestDTO;
+import xyz.qiquqiu.aiserver.common.LoginResultVO;
 import xyz.qiquqiu.aiserver.entity.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
 
-    boolean save(LoginRequest req);
+    boolean save(LoginRequestDTO req);
 
-    BaseResult<LoginResult> login(LoginRequest req);
+    BaseResult<LoginResultVO> login(LoginRequestDTO req);
 }

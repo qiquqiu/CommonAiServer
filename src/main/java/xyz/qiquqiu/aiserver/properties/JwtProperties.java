@@ -17,7 +17,7 @@ public class JwtProperties {
      */
     private long ttl;
     /**
-     * jwt令牌的请求头名称，默认authorization
+     * jwt令牌的请求头名称，前端约定：Authorization
      */
     private String tokenName;
 }

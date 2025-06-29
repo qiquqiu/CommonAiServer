@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @AllArgsConstructor
-public class LoginRequest {
+public class LoginRequestDTO {
     @NotNull(message = "用户名不能为空")
     private String username;
 

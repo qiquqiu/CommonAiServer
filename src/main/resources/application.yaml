@@ -11,6 +11,13 @@ spring:
         options:
           model: qwen-max
           temperature: 0.9
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+            schema: classpath:schema-@@platform@@.sql
+            platform: mysql
   datasource:
       driver-class-name: ${aiserver.datasource.driver-class-name}
       url: jdbc:mysql://${aiserver.datasource.host}:${aiserver.datasource.port}/${aiserver.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
@@ -20,7 +27,7 @@ aiserver:
   jwt:
     secret-key: 72321474fd3a11ffbd1e88a6f35cd51058a4effe00940828b2c7ecb87cae14b5
     ttl: 7200000 # 2 hour
-    token-name: authorization
+    token-name: Authorization
 logging:
   level:
     xyz.qiquqiu.aiserver: debug

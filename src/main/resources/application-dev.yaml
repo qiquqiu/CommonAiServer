@@ -1,7 +1,8 @@
 aiserver:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: ${IPADDR}
+#    host: ${IPADDR}
+    host: localhost
     port: 3306
     database: ai_application
     username: root

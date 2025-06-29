@@ -32,4 +32,17 @@ public class BaseResult<T> {
         result.code = 400;
         return result;
     }
+
+    public static <T> BaseResult<T> error() {
+        BaseResult<T> result = new BaseResult<>();
+        result.code = 400;
+        return result;
+    }
+
+    public static <T> BaseResult<T> noLogin() {
+        BaseResult<T> result = new BaseResult<>();
+        result.message = "用户未登录";
+        result.code = 401;
+        return result;
+    }
 }
