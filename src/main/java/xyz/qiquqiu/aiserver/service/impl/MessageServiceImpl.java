@@ -40,10 +40,10 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
                 .setConversationId(dto.getConversationId())
                 .setOrder(++cnt) // 消息数加一
                 .setSender(dto.getSender())
-                .setContent(dto.getContent());
-        // TODO 图像url
+                .setContent(dto.getContent())
+                .setImageUrl(dto.getImageFile()); // 非空就说明是已经存成功
         this.save(message);
-        log.debug("插入 {} 消息到消息表：{}", dto.getSender(), message);
+        log.debug("插入 {} 的消息到消息表：{}", dto.getSender(), message);
 
         // 3.更新会话表消息数量
         log.debug("更新会话：{} 的消息数量为：{}", c.getId(), cnt);

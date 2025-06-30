@@ -35,6 +35,20 @@ public class AiConfig {
                 .build();
     }
 
+    @Bean
+    public ChatClient multiChatClient(OpenAiChatModel model, ChatMemory chatMemory) {
+        log.debug("初始化 MultiChatClient...");
+        return ChatClient
+                .builder(model)
+                .defaultOptions(ChatOptions.builder().model("qwen-omni-turbo-latest").build())
+                .defaultSystem(SystemPrompt.DEFAULT_SYSTEM_PROMPT)
+                .defaultAdvisors(
+                        new SimpleLoggerAdvisor(),
+                        MessageChatMemoryAdvisor.builder(chatMemory).build()
+                )
+                .build();
+    }
+
     // 单次使用的标题生成模型，无需配置聊天记忆
     @Bean
     public ChatClient titleClient(OpenAiChatModel model) {

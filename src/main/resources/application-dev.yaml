@@ -7,3 +7,6 @@ aiserver:
     database: ai_application
     username: root
     password: 123456
+  file:
+    upload:
+      path: D:\dev\uploads\images\

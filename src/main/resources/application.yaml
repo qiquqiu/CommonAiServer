@@ -19,10 +19,10 @@ spring:
             schema: classpath:schema-@@platform@@.sql
             platform: mysql
   datasource:
-      driver-class-name: ${aiserver.datasource.driver-class-name}
-      url: jdbc:mysql://${aiserver.datasource.host}:${aiserver.datasource.port}/${aiserver.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: ${aiserver.datasource.username}
-      password: ${aiserver.datasource.password}
+    driver-class-name: ${aiserver.datasource.driver-class-name}
+    url: jdbc:mysql://${aiserver.datasource.host}:${aiserver.datasource.port}/${aiserver.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${aiserver.datasource.username}
+    password: ${aiserver.datasource.password}
 aiserver:
   jwt:
     secret-key: 72321474fd3a11ffbd1e88a6f35cd51058a4effe00940828b2c7ecb87cae14b5
@@ -31,3 +31,7 @@ aiserver:
 logging:
   level:
     xyz.qiquqiu.aiserver: debug
+file:
+  upload:
+    path: ${aiserver.file.upload.path}
+    url-prefix: /resources/images/

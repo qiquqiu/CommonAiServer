@@ -32,6 +32,7 @@ public class ChatController {
         return chatService.getConversations();
     }
 
+    // 根据对话id获取对话消息
     @GetMapping("/conversations/{conversationId}/messages")
     public BaseResult<List<MessageVO>> getConversationMessages(@PathVariable String conversationId) {
         if (StrUtil.isBlank(conversationId)) {
