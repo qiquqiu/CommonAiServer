@@ -63,6 +63,11 @@ public class ChatController {
         if (StrUtil.isBlank(conversationId)) {
             return BaseResult.error();
         }
-        return chatService.generateTitle(conversationId);
+        try {
+            return chatService.generateTitle(conversationId);
+        } catch (Exception e) {
+            log.error("生成标题失败，尝试重试...", e);
+            return chatService.generateTitle(conversationId);
+        }
     }
 }

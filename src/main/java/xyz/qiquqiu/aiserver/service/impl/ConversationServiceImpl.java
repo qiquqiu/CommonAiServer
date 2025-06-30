@@ -63,7 +63,7 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
         String conversationId = UUID.randomUUID().toString();
         ConversationVO conversationVO = new ConversationVO()
                 .setConversationId(conversationId)
-                .setTitle("新对话" + conversationId.substring(0, 8))
+                .setTitle("新对话")
                 .setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         Conversation conversation = new Conversation()
                 .setId(conversationVO.getConversationId())
