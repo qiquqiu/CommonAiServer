@@ -86,6 +86,8 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
         // 2.查询用户对话列表（根据id查询所有会话记录）
         List<Conversation> conversations = this.lambdaQuery()
                 .eq(Conversation::getUserId, userId)
+                // 前端会话列表的渲染，并未做排序，一切新建对话和对话跳转、展示的顺序完全依赖此处
+                .orderBy(true, false, Conversation::getCreatedAt)
                 .list();
 
         // 3.PO集合转VO集合
