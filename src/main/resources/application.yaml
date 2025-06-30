@@ -6,7 +6,7 @@ spring:
   ai:
     openai:
       base-url: https://dashscope.aliyuncs.com/compatible-mode
-      api-key: ${BAILIAN_API_KEY}
+      api-key: ${aiserver.ai.api-key}
       chat:
         options:
           model: qwen-max
@@ -15,7 +15,7 @@ spring:
       memory:
         repository:
           jdbc:
-            initialize-schema: never
+            initialize-schema: always
             schema: classpath:schema-@@platform@@.sql
             platform: mysql
   datasource:
@@ -34,4 +34,4 @@ logging:
 file:
   upload:
     path: ${aiserver.file.upload.path}
-    url-prefix: /resources/images/
+    url-prefix: ${aiserver.file.upload.url-prifix}
