@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import xyz.qiquqiu.aiserver.context.BaseContext;
@@ -33,6 +34,12 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 如果是OPTIONS请求，则直接放行，这是CORS预检请求
+        if (HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
+            log.info("OPTIONS请求，直接放行");
+            return true;
+        }
+
         // 1、从请求头中获取令牌
         String token = request.getHeader(jwtProperties.getTokenName());
 

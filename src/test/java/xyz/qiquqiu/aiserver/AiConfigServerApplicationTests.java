@@ -34,8 +34,7 @@ class AiConfigServerApplicationTests {
 
     @Test
     void parseJWT() {
-        String token1 = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsImV4cCI6MTc1MTE4MjkyNn0.DimgG7DFV3JTYlHN86txnZehZNn2g91S67xiNrZS2DA";
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsImV4cCI6MTc1MTE5MDIyMn0.Z_KLNExNvMNv8G-2Pqyzt4StfPKLOZZLfV87FAGkkW4";
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsImV4cCI6MTc1MTgxMzM2M30.kojxsi7t-lRjmnbvcMWDa8tO0rtNrg8He5cuef76UBk";
         Claims claims = JwtUtil.parseJWT(jwtProperties.getSecretKey(), token);
         System.out.println("claims = " + claims);
         String userId = claims.get("userId").toString();

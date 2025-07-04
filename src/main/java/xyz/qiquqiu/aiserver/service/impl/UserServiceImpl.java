@@ -1,5 +1,6 @@
 package xyz.qiquqiu.aiserver.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.qiquqiu.aiserver.common.BaseResult;
@@ -16,6 +17,7 @@ import xyz.qiquqiu.aiserver.util.MD5Util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * <p>
@@ -34,7 +36,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 用户注册
     @Override
-    public boolean save(LoginRequestDTO req) {
+    public boolean saveUser(LoginRequestDTO req) {
         // 新增用户
         String username = req.getUsername();
         String password = MD5Util.encode(req.getPassword());
@@ -42,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         try {
             this.save(user);
         } catch (Exception e) {
-            log.error("注册失败！", e);
+            log.error("注册失败！");
             return false;
         }
         log.debug("注册成功！");

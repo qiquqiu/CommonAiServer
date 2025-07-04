@@ -16,7 +16,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
 
-    boolean save(LoginRequestDTO req);
+    boolean saveUser(LoginRequestDTO req);
 
     BaseResult<LoginResultVO> login(LoginRequestDTO req);
+
 }
