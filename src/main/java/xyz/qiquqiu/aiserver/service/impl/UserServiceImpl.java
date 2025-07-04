@@ -16,6 +16,7 @@ import xyz.qiquqiu.aiserver.util.JwtUtil;
 import xyz.qiquqiu.aiserver.util.MD5Util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -74,5 +75,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), ttl, claims);
         log.debug("登录成功！");
         return BaseResult.success(new LoginResultVO(token, String.valueOf(user.getId()), user.getUsername()));
+    }
+
+
+    // 根据id获取用户信息（不包含密码）
+    @Override
+    public BaseResult<User> getInfoById(Long id) {
+        User user = this.lambdaQuery()
+                .eq(User::getId, id)
+                .select(field -> !field.getColumn().equals("password"))
+                .one();
+        return BaseResult.success(user);
+    }
+
+    @Override
+    public BaseResult<List<User>> getAll() {
+        List<User> list = this.lambdaQuery().list();
+        return BaseResult.success(list);
     }
 }

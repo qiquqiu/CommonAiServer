@@ -10,6 +10,8 @@ import xyz.qiquqiu.aiserver.common.LoginResultVO;
 import xyz.qiquqiu.aiserver.entity.po.User;
 import xyz.qiquqiu.aiserver.service.IUserService;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -29,5 +31,16 @@ public class UserController {
     public BaseResult<LoginResultVO> login(@RequestBody @Valid LoginRequestDTO req) {
         log.debug("用户登录请求：{}", req);
         return userService.login(req);
+    }
+
+    @GetMapping("/{id}")
+    public BaseResult<User> getById(@PathVariable Long id) {
+        log.debug("获取用户信息：id={}", id);
+        return userService.getInfoById(id);
+    }
+
+    @GetMapping("/all")
+    public BaseResult<List<User>> getAll() {
+        return userService.getAll();
     }
 }
