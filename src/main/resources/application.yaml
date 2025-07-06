@@ -35,3 +35,6 @@ file:
   upload:
     path: ${aiserver.file.upload.path}
     url-prefix: /resources/images/
+  gallery:
+    path: D:\Android\gallary\
+    url-prefix: /resources/gallery/
