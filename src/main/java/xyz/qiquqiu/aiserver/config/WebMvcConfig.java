@@ -28,7 +28,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtTokenInterceptor)
                 .addPathPatterns("/user/**", "/chat/**", "gallery/**")
-                .excludePathPatterns("/user/login", "/user/register");
+                .excludePathPatterns(
+                        "/user/login",
+                        "/user/register"
+                );
     }
 
     // 配置跨域

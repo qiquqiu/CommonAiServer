@@ -42,8 +42,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Conversation> implements IConversationService {
 
+    private int modelIndex = 0;
     private final IMessageService messageService;
-    private final ChatClient defaultChatClient;
+    private final ChatClient[] chatModels;
     private final ChatClient multiChatClient;
     private final ChatMemory chatMemory;
     private final ChatClient titleClient;
@@ -155,7 +156,7 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
     // 处理纯文本的模型调用
     private Flux<String> processText(SendMessageDTO dto) {
         String prompt = dto.getContent();
-        return defaultChatClient.prompt()
+        return getOneModel().prompt()
                 .user(prompt)
                 .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, dto.getConversationId()))
                 .stream()
@@ -220,4 +221,20 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
         log.debug("对话：{} 的标题已更新！", conversationId);
         return BaseResult.success(title);
     }
+
+    private ChatClient getOneModel() {
+        log.debug("正在获取一个对话模型（轮询策略）...");
+        modelIndex %= 3;
+        String model = "unconfirm";
+        if (modelIndex == 0) {
+            model = "qwen-max";
+        } else if (modelIndex == 1) {
+            model = "qwen-max-latest";
+        } else if (modelIndex == 2) {
+            model = "deepseek-v3";
+        }
+        log.debug("当前使用的模型：【{}】", model);
+        return chatModels[(modelIndex++) % 3];
+    }
+
 }
