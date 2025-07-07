@@ -33,6 +33,13 @@ public class BaseResult<T> {
         return result;
     }
 
+    public static <T> BaseResult<T> error(int code, String msg) {
+        BaseResult<T> result = new BaseResult<>();
+        result.message = msg;
+        result.code = code;
+        return result;
+    }
+
     public static <T> BaseResult<T> error() {
         BaseResult<T> result = new BaseResult<>();
         result.code = 400;
