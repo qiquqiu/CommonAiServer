@@ -30,6 +30,7 @@ aiserver:
     token-name: Authorization
 logging:
   level:
+#    org.springframework.ai.chat.client.advisor: debug
     xyz.qiquqiu.aiserver: debug
 file:
   upload:
