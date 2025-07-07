@@ -1,15 +1,12 @@
 package xyz.qiquqiu.aiserver;
 
-import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import xyz.qiquqiu.aiserver.common.SimpleMessage;
+import xyz.qiquqiu.aiserver.common.dto.SimpleMessageDTO;
 import xyz.qiquqiu.aiserver.properties.JwtProperties;
-import xyz.qiquqiu.aiserver.service.IConversationService;
-import xyz.qiquqiu.aiserver.service.impl.ConversationServiceImpl;
 import xyz.qiquqiu.aiserver.util.JwtUtil;
 import xyz.qiquqiu.aiserver.util.MD5Util;
 
@@ -45,7 +42,7 @@ class AiConfigServerApplicationTests {
 
     @Test
     void testToString() {
-        SimpleMessage sm = new SimpleMessage();
+        SimpleMessageDTO sm = new SimpleMessageDTO();
         sm.setType(MessageType.TOOL);
         sm.setContent("你是谁？");
 

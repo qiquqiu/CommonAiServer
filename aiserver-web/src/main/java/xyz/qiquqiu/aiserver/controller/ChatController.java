@@ -1,19 +1,19 @@
 package xyz.qiquqiu.aiserver.controller;
 
 import cn.hutool.core.util.StrUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
-import xyz.qiquqiu.aiserver.common.*;
+import xyz.qiquqiu.aiserver.common.BaseResult;
 import xyz.qiquqiu.aiserver.common.dto.FinalizeDTO;
 import xyz.qiquqiu.aiserver.common.dto.SendMessageDTO;
 import xyz.qiquqiu.aiserver.common.vo.ConversationVO;
 import xyz.qiquqiu.aiserver.common.vo.MessageVO;
 import xyz.qiquqiu.aiserver.service.IConversationService;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @Slf4j
