@@ -1,19 +1,15 @@
 package xyz.qiquqiu.aiserver.common;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 @Getter
 @AllArgsConstructor
-public class LoginRequestDTO {
-    @NotBlank(message = "用户名不能为空")
-    private String username;
-
+public class ChangePasswordDTO {
+    private String oldPassword;
     @NotBlank(message = "密码不能为空")
     @Size(min = 8, max = 20, message = "密码长度必须在8-20位之间")
-    private String password;
+    private String newPassword;
 }

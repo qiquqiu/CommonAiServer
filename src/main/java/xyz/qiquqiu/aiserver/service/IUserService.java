@@ -1,10 +1,11 @@
 package xyz.qiquqiu.aiserver.service;
 
-import xyz.qiquqiu.aiserver.common.BaseResult;
-import xyz.qiquqiu.aiserver.common.LoginRequestDTO;
-import xyz.qiquqiu.aiserver.common.LoginResultVO;
+import jakarta.validation.Valid;
+import xyz.qiquqiu.aiserver.common.*;
 import xyz.qiquqiu.aiserver.entity.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,7 +17,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
 
-    boolean save(LoginRequestDTO req);
+    boolean saveUser(LoginRequestDTO req);
 
     BaseResult<LoginResultVO> login(LoginRequestDTO req);
+
+    BaseResult<User> getInfoById(Long id);
+
+    BaseResult<List<User>> getAll();
+
+    BaseResult<Void> changePassword(@Valid ChangePasswordDTO dto);
+
+    BaseResult<UserInfoVO> getMe();
+
+    BaseResult<Void> logout();
 }

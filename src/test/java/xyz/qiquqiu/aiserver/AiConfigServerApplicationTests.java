@@ -11,6 +11,7 @@ import xyz.qiquqiu.aiserver.properties.JwtProperties;
 import xyz.qiquqiu.aiserver.service.IConversationService;
 import xyz.qiquqiu.aiserver.service.impl.ConversationServiceImpl;
 import xyz.qiquqiu.aiserver.util.JwtUtil;
+import xyz.qiquqiu.aiserver.util.MD5Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +77,12 @@ class AiConfigServerApplicationTests {
                 .content();
 
         System.out.println("ai-new-title = " + title);
+    }
+
+    @Test
+    void testMD5() {
+        String pwd = MD5Util.encode("admin");
+        System.out.println("pwd = " + pwd);
     }
 
 }

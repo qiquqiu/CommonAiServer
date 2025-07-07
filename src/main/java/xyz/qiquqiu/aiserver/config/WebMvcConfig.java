@@ -7,6 +7,7 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.web.servlet.config.annotation.*;
 import xyz.qiquqiu.aiserver.interceptor.JwtTokenInterceptor;
 import xyz.qiquqiu.aiserver.properties.FileUploadProperties;
+import xyz.qiquqiu.aiserver.properties.GalleryProperties;
 
 import java.util.concurrent.Executor;
 
@@ -20,12 +21,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final JwtTokenInterceptor jwtTokenInterceptor;
     private final FileUploadProperties fileUploadProperties;
+    private final GalleryProperties galleryProperties;
     private final Executor customThreadPoolTaskExecutor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtTokenInterceptor)
-                .addPathPatterns("/user/**", "/chat/**")
+                .addPathPatterns("/user/**", "/chat/**", "gallery/**")
                 .excludePathPatterns("/user/login", "/user/register");
     }
 
@@ -45,6 +47,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         //         .addResourceLocations("file:D:/dev/uploads/images/");
         registry.addResourceHandler(fileUploadProperties.getUrlPrefix() + "**")
                 .addResourceLocations("file:" + fileUploadProperties.getPath());
+
+        registry.addResourceHandler(galleryProperties.getUrlPrefix() + "**")
+                .addResourceLocations("file:" + galleryProperties.getPath());
     }
 
     @Override
