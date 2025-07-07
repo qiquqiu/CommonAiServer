@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FlowerImageDTO {
+public class FlowerImageVO {
     private String id;
 
     // 图片的url（静态资源路径），以/开头
