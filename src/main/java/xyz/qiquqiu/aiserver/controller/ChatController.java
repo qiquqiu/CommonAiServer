@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 import xyz.qiquqiu.aiserver.common.*;
 import xyz.qiquqiu.aiserver.service.IConversationService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Slf4j
