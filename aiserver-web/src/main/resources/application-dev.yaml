@@ -1,0 +1,16 @@
+aiserver:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    host: ${IPADDR}
+    host: localhost
+    port: 3306
+    database: ai_application
+    username: root
+    password: 123456
+  file:
+    upload:
+      path: D:\dev\upload\
+      url-prefix: /resources/images/
+    gallery:
+      path: D:\dev\gallery\
+      url-prefix: /resources/collections/
