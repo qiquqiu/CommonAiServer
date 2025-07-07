@@ -1,9 +1,7 @@
 package xyz.qiquqiu.aiserver.service;
 
 import jakarta.validation.Valid;
-import xyz.qiquqiu.aiserver.common.BaseResult;
-import xyz.qiquqiu.aiserver.common.LoginRequestDTO;
-import xyz.qiquqiu.aiserver.common.LoginResultVO;
+import xyz.qiquqiu.aiserver.common.*;
 import xyz.qiquqiu.aiserver.entity.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -27,5 +25,9 @@ public interface IUserService extends IService<User> {
 
     BaseResult<List<User>> getAll();
 
-    BaseResult<Void> changePassword(@Valid LoginRequestDTO dto);
+    BaseResult<Void> changePassword(@Valid ChangePasswordDTO dto);
+
+    BaseResult<UserInfoVO> getMe();
+
+    BaseResult<Void> logout();
 }

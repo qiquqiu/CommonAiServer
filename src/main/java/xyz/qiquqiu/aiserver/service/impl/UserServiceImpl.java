@@ -3,9 +3,7 @@ package xyz.qiquqiu.aiserver.service.impl;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import xyz.qiquqiu.aiserver.common.BaseResult;
-import xyz.qiquqiu.aiserver.common.LoginRequestDTO;
-import xyz.qiquqiu.aiserver.common.LoginResultVO;
+import xyz.qiquqiu.aiserver.common.*;
 import xyz.qiquqiu.aiserver.context.BaseContext;
 import xyz.qiquqiu.aiserver.entity.po.User;
 import xyz.qiquqiu.aiserver.mapper.UserMapper;
@@ -96,18 +94,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public BaseResult<Void> changePassword(LoginRequestDTO dto) {
+    public BaseResult<Void> changePassword(ChangePasswordDTO dto) {
         Long userId = BaseContext.getCurrentId();
         User user = this.getById(userId);
         if (user == null) {
             return BaseResult.error("用户不存在！");
         }
-        log.debug("用户：{}, {} 修改密码", userId, dto.getUsername());
-        user.setPassword(MD5Util.encode(dto.getPassword()));
+        log.debug("用户：{}, {} 修改密码", userId, user.getUsername());
+        // 先校验旧密码对不对
+        if (!MD5Util.encode(dto.getOldPassword()).equals(user.getPassword())) {
+            return BaseResult.error(401, "旧密码错误！");
+        }
+        // 允许修改密码
+        user.setPassword(MD5Util.encode(dto.getNewPassword()));
         this.lambdaUpdate()
                 .eq(User::getId, userId)
                 .set(User::getPassword, user.getPassword())
                 .update();
+        return BaseResult.success();
+    }
+
+    // 查询当前用户的信息
+    @Override
+    public BaseResult<UserInfoVO> getMe() {
+        Long userId = BaseContext.getCurrentId();
+        User user = this.lambdaQuery()
+                .eq(User::getId, userId)
+                .select(field -> !field.getColumn().equals("password"))
+                .one();
+        log.debug("获取当前用户信息：{}", user);
+        return BaseResult.success(UserInfoVO.of(user));
+    }
+
+    // 用户退出登录
+    @Override
+    public BaseResult<Void> logout() {
+        Long userId = BaseContext.getCurrentId();
+        log.debug("用户：{} 退出登录", userId);
+        BaseContext.removeCurrentId();
         return BaseResult.success();
     }
 }
