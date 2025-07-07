@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import xyz.qiquqiu.aiserver.common.BaseResult;
 import xyz.qiquqiu.aiserver.common.LoginRequestDTO;
 import xyz.qiquqiu.aiserver.common.LoginResultVO;
+import xyz.qiquqiu.aiserver.context.BaseContext;
 import xyz.qiquqiu.aiserver.entity.po.User;
 import xyz.qiquqiu.aiserver.mapper.UserMapper;
 import xyz.qiquqiu.aiserver.properties.JwtProperties;
@@ -92,5 +93,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public BaseResult<List<User>> getAll() {
         List<User> list = this.lambdaQuery().list();
         return BaseResult.success(list);
+    }
+
+    @Override
+    public BaseResult<Void> changePassword(LoginRequestDTO dto) {
+        Long userId = BaseContext.getCurrentId();
+        User user = this.getById(userId);
+        if (user == null) {
+            return BaseResult.error("用户不存在！");
+        }
+        log.debug("用户：{}, {} 修改密码", userId, dto.getUsername());
+        user.setPassword(MD5Util.encode(dto.getPassword()));
+        this.lambdaUpdate()
+                .eq(User::getId, userId)
+                .set(User::getPassword, user.getPassword())
+                .update();
+        return BaseResult.success();
     }
 }

@@ -1,5 +1,6 @@
 package xyz.qiquqiu.aiserver.service;
 
+import jakarta.validation.Valid;
 import xyz.qiquqiu.aiserver.common.BaseResult;
 import xyz.qiquqiu.aiserver.common.LoginRequestDTO;
 import xyz.qiquqiu.aiserver.common.LoginResultVO;
@@ -25,4 +26,6 @@ public interface IUserService extends IService<User> {
     BaseResult<User> getInfoById(Long id);
 
     BaseResult<List<User>> getAll();
+
+    BaseResult<Void> changePassword(@Valid LoginRequestDTO dto);
 }

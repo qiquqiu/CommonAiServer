@@ -39,8 +39,14 @@ public class UserController {
         return userService.getInfoById(id);
     }
 
-    @GetMapping("/all")
+//    @GetMapping("/all")
     public BaseResult<List<User>> getAll() {
         return userService.getAll();
+    }
+
+    // 修改密码
+    @PutMapping("/me/password")
+    public BaseResult<Void> changePassword(@RequestBody @Valid LoginRequestDTO dto) {
+        return userService.changePassword(dto);
     }
 }
