@@ -26,7 +26,7 @@ spring:
 aiserver:
   jwt:
     secret-key: 72321474fd3a11ffbd1e88a6f35cd51058a4effe00940828b2c7ecb87cae14b5
-    ttl: 7200000 # 2 hour
+    ttl: 259200000 # 3 days
     token-name: Authorization
 logging:
   level:

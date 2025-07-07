@@ -1,10 +1,12 @@
 package xyz.qiquqiu.aiserver.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.qiquqiu.aiserver.common.BaseResult;
 import xyz.qiquqiu.aiserver.common.LoginRequestDTO;
 import xyz.qiquqiu.aiserver.common.LoginResultVO;
+import xyz.qiquqiu.aiserver.context.BaseContext;
 import xyz.qiquqiu.aiserver.entity.po.User;
 import xyz.qiquqiu.aiserver.mapper.UserMapper;
 import xyz.qiquqiu.aiserver.properties.JwtProperties;
@@ -15,7 +17,9 @@ import xyz.qiquqiu.aiserver.util.JwtUtil;
 import xyz.qiquqiu.aiserver.util.MD5Util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * <p>
@@ -34,7 +38,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 用户注册
     @Override
-    public boolean save(LoginRequestDTO req) {
+    public boolean saveUser(LoginRequestDTO req) {
         // 新增用户
         String username = req.getUsername();
         String password = MD5Util.encode(req.getPassword());
@@ -42,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         try {
             this.save(user);
         } catch (Exception e) {
-            log.error("注册失败！", e);
+            log.error("注册失败！");
             return false;
         }
         log.debug("注册成功！");
@@ -72,5 +76,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), ttl, claims);
         log.debug("登录成功！");
         return BaseResult.success(new LoginResultVO(token, String.valueOf(user.getId()), user.getUsername()));
+    }
+
+
+    // 根据id获取用户信息（不包含密码）
+    @Override
+    public BaseResult<User> getInfoById(Long id) {
+        User user = this.lambdaQuery()
+                .eq(User::getId, id)
+                .select(field -> !field.getColumn().equals("password"))
+                .one();
+        return BaseResult.success(user);
+    }
+
+    @Override
+    public BaseResult<List<User>> getAll() {
+        List<User> list = this.lambdaQuery().list();
+        return BaseResult.success(list);
+    }
+
+    @Override
+    public BaseResult<Void> changePassword(LoginRequestDTO dto) {
+        Long userId = BaseContext.getCurrentId();
+        User user = this.getById(userId);
+        if (user == null) {
+            return BaseResult.error("用户不存在！");
+        }
+        log.debug("用户：{}, {} 修改密码", userId, dto.getUsername());
+        user.setPassword(MD5Util.encode(dto.getPassword()));
+        this.lambdaUpdate()
+                .eq(User::getId, userId)
+                .set(User::getPassword, user.getPassword())
+                .update();
+        return BaseResult.success();
     }
 }
