@@ -1,7 +1,12 @@
 package xyz.qiquqiu.aiserver.service;
 
+import xyz.qiquqiu.aiserver.common.BaseResult;
+import xyz.qiquqiu.aiserver.common.FlowerImageVO;
 import xyz.qiquqiu.aiserver.entity.po.Gallery;
 import com.baomidou.mybatisplus.extension.service.IService;
+import xyz.qiquqiu.aiserver.entity.query.PageQuery;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +18,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IGalleryService extends IService<Gallery> {
 
+    BaseResult<List<FlowerImageVO>> pageQuery(PageQuery query);
 }

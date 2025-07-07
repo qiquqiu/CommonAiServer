@@ -1,8 +1,10 @@
 package xyz.qiquqiu.aiserver.common;
 
+import cn.hutool.core.bean.BeanUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.qiquqiu.aiserver.entity.po.Gallery;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +18,8 @@ public class FlowerImageVO {
     private String name;
 
     private String description;
+
+    public static FlowerImageVO of(Gallery po) {
+        return BeanUtil.copyProperties(po, FlowerImageVO.class);
+    }
 }
