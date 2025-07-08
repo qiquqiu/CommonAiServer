@@ -1,6 +1,7 @@
 package xyz.qiquqiu.aiserver.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -11,16 +12,17 @@ import org.springframework.ai.content.Media;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
-import xyz.qiquqiu.aiserver.common.*;
+import xyz.qiquqiu.aiserver.common.BaseResult;
 import xyz.qiquqiu.aiserver.common.dto.FinalizeDTO;
+import xyz.qiquqiu.aiserver.common.dto.RenameConversationDTO;
 import xyz.qiquqiu.aiserver.common.dto.SendMessageDTO;
 import xyz.qiquqiu.aiserver.common.dto.SimpleMessageDTO;
+import xyz.qiquqiu.aiserver.common.po.Conversation;
+import xyz.qiquqiu.aiserver.common.po.Message;
 import xyz.qiquqiu.aiserver.common.vo.ConversationVO;
 import xyz.qiquqiu.aiserver.common.vo.MessageVO;
 import xyz.qiquqiu.aiserver.constant.Sender;
 import xyz.qiquqiu.aiserver.context.BaseContext;
-import xyz.qiquqiu.aiserver.common.po.Conversation;
-import xyz.qiquqiu.aiserver.common.po.Message;
 import xyz.qiquqiu.aiserver.mapper.ConversationMapper;
 import xyz.qiquqiu.aiserver.properties.FileUploadProperties;
 import xyz.qiquqiu.aiserver.service.IConversationService;
@@ -225,6 +227,39 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
                 .update();
         log.debug("对话：{} 的标题已更新！", conversationId);
         return BaseResult.success(title);
+    }
+
+    // 重命名对话
+    @Override
+    public BaseResult<Void> renameConversation(RenameConversationDTO dto) {
+        Long userId = BaseContext.getCurrentId();
+        if (userId == null) {
+            return BaseResult.noLogin();
+        }
+        log.debug("正在重命名对话，dto = {}", dto);
+        this.lambdaUpdate()
+                .eq(Conversation::getId, dto.getConversationId())
+                .set(Conversation::getTitle, dto.getNewTitle())
+                .update();
+        return BaseResult.success();
+    }
+
+    // 批量删除对话
+    @Override
+    @Transactional
+    public BaseResult<Void> deleteConversation(List<String> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return BaseResult.error();
+        }
+        log.debug("1.正在批量删除对话，ids = 【{}】", ids);
+        this.lambdaUpdate()
+                .in(Conversation::getId, ids)
+                .remove();
+        log.debug("2.正在批量删除相关对话的所有消息...");
+        messageService.lambdaUpdate()
+                .in(Message::getConversationId, ids)
+                .remove();
+        return BaseResult.success();
     }
 
     private ChatClient getOneModel() {

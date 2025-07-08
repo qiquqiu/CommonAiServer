@@ -1,8 +1,10 @@
 package xyz.qiquqiu.aiserver.service;
 
+import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
 import xyz.qiquqiu.aiserver.common.*;
 import xyz.qiquqiu.aiserver.common.dto.FinalizeDTO;
+import xyz.qiquqiu.aiserver.common.dto.RenameConversationDTO;
 import xyz.qiquqiu.aiserver.common.dto.SendMessageDTO;
 import xyz.qiquqiu.aiserver.common.po.Conversation;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -32,4 +34,8 @@ public interface IConversationService extends IService<Conversation> {
     BaseResult saveAiResponse(String conversationId, FinalizeDTO dto);
 
     BaseResult<String> generateTitle(String conversationId);
+
+    BaseResult<Void> renameConversation(@Valid RenameConversationDTO dto);
+
+    BaseResult<Void> deleteConversation(List<String> ids);
 }

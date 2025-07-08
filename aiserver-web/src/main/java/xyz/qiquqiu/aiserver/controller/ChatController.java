@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import xyz.qiquqiu.aiserver.common.BaseResult;
 import xyz.qiquqiu.aiserver.common.dto.FinalizeDTO;
+import xyz.qiquqiu.aiserver.common.dto.RenameConversationDTO;
 import xyz.qiquqiu.aiserver.common.dto.SendMessageDTO;
 import xyz.qiquqiu.aiserver.common.vo.ConversationVO;
 import xyz.qiquqiu.aiserver.common.vo.MessageVO;
@@ -73,5 +74,17 @@ public class ChatController {
             log.error("生成标题失败，尝试重试...", e);
             return chatService.generateTitle(conversationId);
         }
+    }
+
+    // 重命名指定会话
+    @PutMapping("/conversations/rename")
+    public BaseResult<Void> renameConversation(@RequestBody RenameConversationDTO dto) {
+        return chatService.renameConversation(dto);
+    }
+
+    // 批量删除会话
+    @PutMapping("/conversations/delete")
+    public BaseResult<Void> deleteConversation(@RequestBody List<String> ids) {
+        return chatService.deleteConversation(ids);
     }
 }
