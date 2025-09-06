@@ -267,9 +267,9 @@ public class ConversationServiceImpl extends ServiceImpl<ConversationMapper, Con
         modelIndex %= 3;
         String model = "unconfirm";
         if (modelIndex == 0) {
-            model = "qwen-max";
+            model = "qwen3-max-preview";
         } else if (modelIndex == 1) {
-            model = "qwen-max-latest";
+            model = "qwen-plus-2025-04-28";
         } else if (modelIndex == 2) {
             model = "deepseek-v3";
         }

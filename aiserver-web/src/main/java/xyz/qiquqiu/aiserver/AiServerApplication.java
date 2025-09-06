@@ -14,6 +14,11 @@ public class AiServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AiServerApplication.class, args);
+        System.out.println("  _____ _                         _    ___ \n" +
+                " |  ___| | _____      _____ _ __ / \\  |_ _|\n" +
+                " | |_  | |/ _ \\ \\ /\\ / / _ \\ '__/ _ \\  | | \n" +
+                " |  _| | | (_) \\ V  V /  __/ | / ___ \\ | | \n" +
+                " |_|   |_|\\___/ \\_/\\_/ \\___|_|/_/   \\_\\___|  v1.0.0");
         log.debug(">>>>>>>>>>>>>> 服务启动成功！");
     }
 

@@ -87,7 +87,7 @@ public class AiConfig {
         log.debug("初始化 MultiChatClient...");
         return ChatClient
                 .builder(model)
-                .defaultOptions(ChatOptions.builder().model("qwen-omni-turbo-latest").build())
+                .defaultOptions(ChatOptions.builder().model("qwen-omni-turbo-2025-03-26").build())
                 .defaultSystem(SystemPrompt.DEFAULT_SYSTEM_PROMPT)
                 .defaultAdvisors(
                         new SimpleLoggerAdvisor(),

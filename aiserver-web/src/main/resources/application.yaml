@@ -9,7 +9,7 @@ spring:
       api-key: ${aiserver.ai.api-key}
       chat:
         options:
-          model: qwen-max
+          model: qwen3-max-preview
           temperature: 0.9
     chat:
       memory:
@@ -32,6 +32,9 @@ logging:
   level:
 #    org.springframework.ai.chat.client.advisor: debug
     xyz.qiquqiu.aiserver: debug
+  pattern:
+    console: '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([%thread]){magenta} %clr(%-5level){highlight} %clr(%logger{36}){cyan} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
 file:
   upload:
     path: ${aiserver.file.upload.path}
